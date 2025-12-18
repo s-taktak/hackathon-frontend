@@ -1,0 +1,4 @@
+/* index.cssの中身をこれだけに書き換える */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
