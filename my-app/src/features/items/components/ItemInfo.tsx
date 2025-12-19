@@ -12,6 +12,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { ItemResponse } from "../../../lib/api_client";
 import { ItemRecommend } from "./ItemRecommend";
+import { Link } from "react-router-dom";
 
 interface ItemInfoProps {
   item: ItemResponse;
@@ -52,17 +53,18 @@ export const ItemInfo = ({ item, isSoldOut, onPurchase }: ItemInfoProps) => {
         </Box>
       </Box>
 
-      <Button
-        variant="contained"
-        color="error"
-        size="large"
-        fullWidth
-        disabled={isSoldOut}
-        onClick={onPurchase}
-        sx={{ py: 1.5, fontSize: "1.2rem", fontWeight: "bold" }}
-      >
-        {isSoldOut ? "売り切れ" : "購入手続きへ"}
-      </Button>
+      <Link to={`/purchase/${item.id}`}>
+        <Button
+          variant="contained"
+          color="error"
+          size="large"
+          fullWidth
+          disabled={isSoldOut}
+          sx={{ py: 1.5, fontSize: "1.2rem", fontWeight: "bold" }}
+        >
+          {isSoldOut ? "売り切れ" : "購入手続きへ"}
+        </Button>
+      </Link>
 
       <Divider sx={{ my: 2 }} />
 

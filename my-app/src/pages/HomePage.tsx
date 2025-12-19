@@ -5,9 +5,9 @@ import {
   CircularProgress,
   Grid,
 } from "@mui/material";
-import { Header } from "../components/Header";
 import { ItemCard } from "../features/items/components/ItemCard";
 import { useItems } from "../features/items/hooks/useItems";
+import { Header } from "../components/Header";
 
 export const HomePage = () => {
   const { items, loading } = useItems();

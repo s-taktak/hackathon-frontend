@@ -7,7 +7,10 @@ export const useItemDetail = (id: string | undefined) => {
 
   useEffect(() => {
     const fetchItem = async () => {
-      if (!id) return;
+      if (!id) {
+        setLoading(false);
+        return;
+      }
       try {
         const data = await ItemService.getItemDetail(id);
         setItem(data);
@@ -29,8 +32,10 @@ export const useItemDetail = (id: string | undefined) => {
       setItem((prev) =>
         prev ? { ...prev, status: ItemStatus.SOLD_OUT } : null
       );
+      return true;
     } catch (error) {
       alert("購入に失敗しました。既に売り切れている可能性があります。");
+      return false;
     }
   };
 

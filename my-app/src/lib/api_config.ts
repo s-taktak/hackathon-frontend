@@ -6,6 +6,6 @@ OpenAPI.BASE = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8080";
 
 // トークンがあればセットする設定（後述のauth.tsで管理してもOK）
 if (typeof window !== "undefined") {
-  const token = localStorage.getItem("access_token");
+  const token = sessionStorage.getItem("access_token");
   if (token) OpenAPI.TOKEN = token;
 }

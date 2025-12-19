@@ -5,7 +5,7 @@ export const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = sessionStorage.getItem("access_token");
     setIsAuthenticated(!!token);
     setLoading(false);
   }, []);

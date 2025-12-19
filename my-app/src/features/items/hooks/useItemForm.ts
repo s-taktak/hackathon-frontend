@@ -47,7 +47,7 @@ export const useItemForm = () => {
         formData.append("files", file);
       });
 
-      const token = localStorage.getItem("access_token");
+      const token = sessionStorage.getItem("access_token");
       const response = await fetch(
         "https://hackathon-backend-810870880891.us-central1.run.app/item",
         {

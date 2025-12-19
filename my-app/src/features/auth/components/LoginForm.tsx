@@ -110,7 +110,7 @@ export default function LoginForm(props: { disableCustomTheme?: boolean }) {
         password: password,
       });
 
-      localStorage.setItem("access_token", response.access_token);
+      sessionStorage.setItem("access_token", response.access_token);
       OpenAPI.TOKEN = response.access_token;
 
       navigate("/");

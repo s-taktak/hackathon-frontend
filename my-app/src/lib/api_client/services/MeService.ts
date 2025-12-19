@@ -37,6 +37,18 @@ export class MeService {
     }
 
     /**
+     * Get Purchased Items
+     * @returns ItemResponse Successful Response
+     * @throws ApiError
+     */
+    public static getPurchasedItems(): CancelablePromise<Array<ItemResponse>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/users/me/purchased',
+        });
+    }
+
+    /**
      * Get Browsing History
      * @returns HistoryResponse Successful Response
      * @throws ApiError
