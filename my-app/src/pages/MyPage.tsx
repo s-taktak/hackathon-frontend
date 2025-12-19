@@ -21,7 +21,9 @@ export const MyPage = () => {
         <Link to="/mypage/purchased">
           <MenuLink label="購入した商品" />
         </Link>
-        <MenuLink label="出品した商品" />
+        <Link to="/mypage/created">
+          <MenuLink label="出品した商品" />
+        </Link>
       </Stack>
     </Container>
   );

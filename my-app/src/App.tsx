@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Box } from "@mui/material";
-
 import "./lib/api_config";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
@@ -13,6 +12,7 @@ import { SearchPage } from "./pages/SearchPage";
 import { PurchaseConfirmPage } from "./pages/PurchaseConfirmPage";
 import { PurchaseSuccessPage } from "./pages/PurchaseSuccessPage";
 import { PurchasedItemsPage } from "./pages/PurchasedItemsPage";
+import { CreatedItemsPage } from "./pages/CreatedItemsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import FooterMenu from "./components/FooterMenu";
 

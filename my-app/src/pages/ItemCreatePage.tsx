@@ -10,7 +10,8 @@ import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
 import { useItemForm } from "../features/items/hooks/useItemForm";
 import { ImageInput } from "../features/items/components/ImageInput";
-import { CATEGORIES, CONDITIONS } from "../features/items/constants";
+import { CategorySelector } from "../features/items/components/CategorySelector";
+import { CONDITIONS } from "../features/items/constants";
 
 export const ItemCreatePage = () => {
   const navigate = useNavigate();
@@ -83,19 +84,14 @@ export const ItemCreatePage = () => {
               <Typography variant="body2" fontWeight="bold" gutterBottom>
                 カテゴリー
               </Typography>
-              <TextField
-                select
-                fullWidth
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                label="カテゴリーを選択"
-              >
-                {CATEGORIES.map((cat) => (
-                  <MenuItem key={cat.id} value={cat.id}>
-                    {cat.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <CategorySelector
+                onSelect={(id: number) => setCategory(id.toString())}
+              />
+              {category && (
+                <Typography variant="caption" color="text.secondary">
+                  選択中のカテゴリーID: {category}
+                </Typography>
+              )}
             </Box>
 
             <Box>
@@ -110,8 +106,8 @@ export const ItemCreatePage = () => {
                 label="状態を選択"
               >
                 {CONDITIONS.map((cond) => (
-                  <MenuItem key={cond} value={cond}>
-                    {cond}
+                  <MenuItem key={cond.id} value={cond.id}>
+                    {cond.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -131,6 +127,16 @@ export const ItemCreatePage = () => {
             placeholder="0"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            sx={{
+              "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                {
+                  WebkitAppearance: "none",
+                  margin: 0,
+                },
+              "& input[type=number]": {
+                MozAppearance: "textfield",
+              },
+            }}
             slotProps={{
               input: {
                 startAdornment: (

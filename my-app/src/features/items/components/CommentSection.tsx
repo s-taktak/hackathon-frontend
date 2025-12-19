@@ -75,14 +75,14 @@ export const CommentSection = ({ itemId, sellerId }: CommentSectionProps) => {
                 }}
               >
                 <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                  {comment.text}
+                  {comment.content}
                 </Typography>
                 <Typography
                   variant="caption"
                   color="text.secondary"
                   sx={{ display: "block", mt: 1, textAlign: "right" }}
                 >
-                  {comment.postedAt}
+                  {comment.created_at}
                 </Typography>
               </Paper>
             </Box>

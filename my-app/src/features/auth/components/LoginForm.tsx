@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import AppTheme from "../../../components/theme/AppTheme";
 import ColorModeSelect from "../../../components/theme/ColorModeSelect";
@@ -181,10 +181,10 @@ export default function LoginForm(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="ログイン状態を保存する"
-            />
+            <Typography variant="body2">
+              アカウントをお持ちでないですか？{" "}
+              <Link to="/signup">新規登録はこちら</Link>
+            </Typography>
             <Button type="submit" fullWidth variant="contained">
               ログイン
             </Button>

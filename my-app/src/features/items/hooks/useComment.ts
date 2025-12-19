@@ -1,52 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  CommentService,
+  CommentCreate,
+  CommentResponse,
+} from "../../../lib/api_client";
 
-type CommentData = {
-  id: number;
-  userId: string;
-  username: string;
-  text: string;
-  postedAt: string;
-  isSeller: boolean;
-};
-
-const MOCK_COMMENTS: CommentData[] = [
+const MOCK_COMMENTS: CommentResponse[] = [
   {
-    id: 1,
-    userId: "user2",
-    username: "購入検討中",
-    text: "コメント失礼します。こちらの商品はお値下げ可能でしょうか？",
-    postedAt: "2時間前",
+    id: "1",
+    item_id: "item_id_1",
+    username: "たかや",
+    content: "これ、値下げ可能ですか？",
+    created_at: "2025-12-19T10:00:00Z",
     isSeller: false,
-  },
-  {
-    id: 2,
-    userId: "user1",
-    username: "佐藤天哉",
-    text: "コメントありがとうございます。今のところ値下げは考えておりません。よろしくお願いいたします。",
-    postedAt: "1時間前",
-    isSeller: true,
   },
 ];
 
 export const useComment = (id: string | undefined) => {
-  const [comments, setComments] = useState<CommentData[]>(MOCK_COMMENTS);
+  const [comments, setComments] = useState<CommentResponse[]>(MOCK_COMMENTS);
   const [inputText, setInputText] = useState("");
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+  const handleSend = async () => {
+    if (!id || !inputText.trim()) return;
 
-    const newComment: CommentData = {
-      id: Date.now(),
-      userId: "me",
-      username: "自分",
-      text: inputText,
-      postedAt: "たった今",
-      isSeller: false,
+    const newComment: CommentCreate = {
+      content: inputText,
     };
 
-    setComments([...comments, newComment]);
-    setInputText("");
+    try {
+      const res = await CommentService.postComment(id as string, newComment);
+
+      setComments((prev) => [...prev, res]);
+      setInputText("");
+    } catch (error) {
+      console.error("コメント送信エラー:", error);
+    }
   };
+
+  const fetchComments = async () => {
+    if (!id) return;
+    try {
+      const res = await CommentService.getComment(id);
+      setComments(res);
+    } catch (error) {
+      console.error("コメント取得エラー:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [id]);
 
   return { comments, inputText, setInputText, handleSend };
 };

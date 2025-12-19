@@ -29,6 +29,7 @@ export type { UserResponse } from './models/UserResponse';
 export type { ValidationError } from './models/ValidationError';
 
 export { AuthService } from './services/AuthService';
+export { CategoryService } from './services/CategoryService';
 export { CommentService } from './services/CommentService';
 export { ItemService } from './services/ItemService';
 export { MeService } from './services/MeService';
