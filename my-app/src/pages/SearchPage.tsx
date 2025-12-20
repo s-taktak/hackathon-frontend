@@ -4,21 +4,28 @@ import {
   Container,
   CircularProgress,
   Grid,
+  IconButton,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useSearchParams } from "react-router-dom";
 import { Header } from "../components/Header";
 import { ItemCard } from "../features/items/components/ItemCard";
 import { useSearchedItems } from "../features/items/hooks/useSearchedItems";
+import { useNavigate } from "react-router-dom";
 
 export const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
   const { items, loading } = useSearchedItems(keyword);
+  const navigate = useNavigate();
 
   return (
     <>
       <Header />
       <Container maxWidth="lg" sx={{ py: 4 }}>
+        <IconButton onClick={() => navigate(-1)}>
+          <ArrowBackIcon />
+        </IconButton>
         <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
           "{keyword}" の検索結果
         </Typography>

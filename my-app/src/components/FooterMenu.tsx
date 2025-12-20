@@ -15,7 +15,7 @@ function FooterMenu() {
   const getValue = () => {
     const path = location.pathname;
     if (path === "/") return 0;
-    if (path === "/search") return 1;
+    if (path === "/aiSearch") return 1;
     if (path === "/sell") return 2;
     if (path === "/mypage") return 3;
     return 4;
@@ -44,7 +44,7 @@ function FooterMenu() {
               navigate("/");
               break;
             case 1:
-              navigate("/search");
+              navigate("/aiSearch");
               break;
             case 2:
               navigate("/sell");
@@ -64,7 +64,7 @@ function FooterMenu() {
         }}
       >
         <BottomNavigationAction label="ホーム" icon={<HomeIcon />} />
-        <BottomNavigationAction label="検索" icon={<SearchIcon />} />
+        <BottomNavigationAction label="AI検索" icon={<SearchIcon />} />
         <BottomNavigationAction label="出品" icon={<CameraAltIcon />} />
         <BottomNavigationAction label="マイページ" icon={<PersonIcon />} />
       </BottomNavigation>

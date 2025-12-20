@@ -98,13 +98,6 @@ export const ItemCard = ({ item }: Props) => {
             <Typography variant="h6" color="error" fontWeight="bold">
               ¥{item.price?.toLocaleString() ?? 0}
             </Typography>
-
-            <Chip
-              label={item.category?.name || "その他"}
-              size="small"
-              variant="outlined"
-              sx={{ fontSize: "0.7rem", height: 20 }}
-            />
           </Box>
         </CardContent>
       </CardActionArea>

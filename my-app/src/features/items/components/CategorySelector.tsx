@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
 import {
   Stack,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  FormControl,
-  InputLabel,
+  Autocomplete,
+  TextField,
   CircularProgress,
-  FormHelperText,
+  Box,
 } from "@mui/material";
 import { Category, CategoryService } from "../../../lib/api_client";
 
@@ -16,140 +13,129 @@ interface CategorySelectorProps {
 }
 
 export const CategorySelector = ({ onSelect }: CategorySelectorProps) => {
-  const [lv0List, setLv0List] = useState<Category[]>([]);
-  const [lv1List, setLv1List] = useState<Category[]>([]);
-  const [lv2List, setLv2List] = useState<Category[]>([]);
+  // リストデータ
+  const [lv0Options, setLv0Options] = useState<Category[]>([]);
+  const [lv1Options, setLv1Options] = useState<Category[]>([]);
+  const [lv2Options, setLv2Options] = useState<Category[]>([]);
 
-  const [selected0, setSelected0] = useState<string>("");
-  const [selected1, setSelected1] = useState<string>("");
-  const [selected2, setSelected2] = useState<string>("");
+  // 選択されたオブジェクト（AutocompleteはID単体よりオブジェクトで持つ方が安定します）
+  const [value0, setValue0] = useState<Category | null>(null);
+  const [value1, setValue1] = useState<Category | null>(null);
+  const [value2, setValue2] = useState<Category | null>(null);
 
   const [loading, setLoading] = useState(false);
 
+  // 1. 最初は大分類をロード
   useEffect(() => {
     CategoryService.getCategories()
-      .then(setLv0List)
+      .then(setLv0Options)
       .catch((err) => console.error("大分類ロード失敗:", err));
   }, []);
 
-  const handleLv0Change = async (event: SelectChangeEvent) => {
-    const val = event.target.value;
+  // 2. 大分類が変わった時
+  const handleLv0Change = async (newValue: Category | null) => {
+    setValue0(newValue);
+    setValue1(null);
+    setValue2(null);
+    setLv1Options([]);
+    setLv2Options([]);
 
-    setSelected0(val);
-    setSelected1("");
-    setSelected2("");
-    setLv1List([]);
-    setLv2List([]);
-
-    if (val) {
+    if (newValue) {
       setLoading(true);
       try {
-        const idNum = Number(val);
-        const children = await CategoryService.getCategories(idNum);
-        setLv1List(children);
-      } catch (e) {
-        console.error("中分類ロード失敗:", e);
+        // newValue.id が 8125 などの場合、DBの parent_id もそれに対応している必要があります
+        const children = await CategoryService.getCategories(newValue.id);
+        setLv1Options(children);
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const handleLv1Change = async (event: SelectChangeEvent) => {
-    const val = event.target.value;
-    setSelected1(val);
-    setSelected2("");
-    setLv2List([]);
+  // 3. 中分類が変わった時
+  const handleLv1Change = async (newValue: Category | null) => {
+    setValue1(newValue);
+    setValue2(null);
+    setLv2Options([]);
 
-    if (val) {
+    if (newValue) {
       setLoading(true);
       try {
-        const children = await CategoryService.getCategories(Number(val));
-        setLv2List(children);
-      } catch (e) {
-        console.error("小分類ロード失敗:", e);
+        const children = await CategoryService.getCategories(newValue.id);
+        setLv2Options(children);
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const handleLv2Change = (event: SelectChangeEvent) => {
-    const val = event.target.value;
-    setSelected2(val);
-    if (val) {
-      onSelect(Number(val));
+  // 4. 小分類が変わった時
+  const handleLv2Change = (newValue: Category | null) => {
+    setValue2(newValue);
+    if (newValue) {
+      onSelect(newValue.id);
     }
   };
 
   return (
-    <Stack spacing={2}>
-      <FormControl fullWidth size="small">
-        <InputLabel>大カテゴリー</InputLabel>
-        <Select
-          value={selected0}
-          label="大カテゴリー"
-          onChange={handleLv0Change}
-        >
-          <MenuItem value="">選択してください</MenuItem>
-          {lv0List.map((c) => (
-            <MenuItem key={c.id} value={c.id.toString()}>
-              {c.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+    <Stack spacing={3}>
+      {/* --- 大分類 --- */}
+      <Autocomplete
+        options={lv0Options}
+        getOptionLabel={(option) => option.name}
+        value={value0}
+        onChange={(_, newValue) => handleLv0Change(newValue)}
+        renderInput={(params) => (
+          <TextField {...params} label="大カテゴリー（検索可）" size="small" />
+        )}
+      />
 
-      {selected0 !== "" && (
-        <FormControl
-          fullWidth
-          size="small"
-          disabled={loading || lv1List.length === 0}
-        >
-          <InputLabel>中カテゴリー</InputLabel>
-          <Select
-            value={selected1}
-            label="中カテゴリー"
-            onChange={handleLv1Change}
-          >
-            <MenuItem value="">選択してください</MenuItem>
-            {lv1List.map((c) => (
-              <MenuItem key={c.id} value={c.id.toString()}>
-                {c.name}
-              </MenuItem>
-            ))}
-          </Select>
-          {selected0 && lv1List.length === 0 && !loading && (
-            <FormHelperText error>
-              子カテゴリーが見つかりません(ID:{selected0})
-            </FormHelperText>
+      {/* --- 中分類（大分類が選択されたら表示） --- */}
+      {(value0 || lv1Options.length > 0) && (
+        <Autocomplete
+          options={lv1Options}
+          getOptionLabel={(option) => option.name}
+          value={value1}
+          disabled={lv1Options.length === 0}
+          onChange={(_, newValue) => handleLv1Change(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="中カテゴリー（検索可）"
+              size="small"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
           )}
-        </FormControl>
+        />
       )}
 
-      {selected1 !== "" && (
-        <FormControl
-          fullWidth
-          size="small"
-          disabled={loading || lv2List.length === 0}
-        >
-          <InputLabel>小カテゴリー</InputLabel>
-          <Select
-            value={selected2}
-            label="小カテゴリー"
-            onChange={handleLv2Change}
-          >
-            <MenuItem value="">選択してください</MenuItem>
-            {lv2List.map((c) => (
-              <MenuItem key={c.id} value={c.id.toString()}>
-                {c.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      {/* --- 小分類（中分類が選択されたら表示） --- */}
+      {(value1 || lv2Options.length > 0) && (
+        <Autocomplete
+          options={lv2Options}
+          getOptionLabel={(option) => option.name}
+          value={value2}
+          disabled={lv2Options.length === 0}
+          onChange={(_, newValue) => handleLv2Change(newValue)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="小カテゴリー（検索可）"
+              size="small"
+            />
+          )}
+        />
       )}
-
-      {loading && <CircularProgress size={20} sx={{ alignSelf: "center" }} />}
     </Stack>
   );
 };

@@ -13,6 +13,7 @@ import { PurchaseConfirmPage } from "./pages/PurchaseConfirmPage";
 import { PurchaseSuccessPage } from "./pages/PurchaseSuccessPage";
 import { PurchasedItemsPage } from "./pages/PurchasedItemsPage";
 import { CreatedItemsPage } from "./pages/CreatedItemsPage";
+import { AiSearchPage } from "./pages/AiSearchPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import FooterMenu from "./components/FooterMenu";
 
@@ -29,8 +30,10 @@ function App() {
             <Route path="/sell" element={<ItemCreatePage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/mypage/purchased" element={<PurchasedItemsPage />} />
+            <Route path="/mypage/created" element={<CreatedItemsPage />} />
           </Route>
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/aiSearch" element={<AiSearchPage />} />
           <Route path="/purchase/:id" element={<PurchaseConfirmPage />} />
           <Route path="/purchase/success" element={<PurchaseSuccessPage />} />
           <Route path="*" element={<Box p={4}>Page Not Found</Box>} />
