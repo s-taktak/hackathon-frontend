@@ -8,9 +8,10 @@ import Stack from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
 import Divider from "@mui/material/Divider";
 import { useNavigate } from "react-router-dom";
-import { useItemForm } from "../features/items/hooks/useItemForm";
-import { ImageInput } from "../features/items/components/ImageInput";
-import { CategorySelector } from "../features/items/components/CategorySelector";
+import { useItemForm } from "../features/listing/hooks/useItemForm";
+import { ImageInput } from "../features/listing/components/ImageInput";
+import { CategorySelector } from "../features/listing/components/CategorySelector";
+import { BrandSelector } from "../features/listing/components/BrandSelector";
 import { CONDITIONS } from "../features/items/constants";
 
 export const ItemCreatePage = () => {
@@ -30,6 +31,13 @@ export const ItemCreatePage = () => {
     handleImageUpload,
     handleRemoveImage,
     handleSubmit,
+    brand,
+    setBrand,
+    handleAiSuggest,
+    suggesting,
+    selectedPath,
+    selectedBrand,
+    isSubmitting,
   } = useItemForm();
 
   return (
@@ -70,6 +78,15 @@ export const ItemCreatePage = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          <Button
+            variant="outlined"
+            onClick={handleAiSuggest}
+            disabled={suggesting}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            {suggesting ? "AIが考え中..." : "AIでカテゴリ・ブランドを自動設定"}
+          </Button>
         </Box>
 
         <Divider />
@@ -86,10 +103,26 @@ export const ItemCreatePage = () => {
               </Typography>
               <CategorySelector
                 onSelect={(id: number) => setCategory(id.toString())}
+                selectedPath={selectedPath}
               />
               {category && (
                 <Typography variant="caption" color="text.secondary">
                   選択中のカテゴリーID: {category}
+                </Typography>
+              )}
+            </Box>
+
+            <Box>
+              <Typography variant="body2" fontWeight="bold" gutterBottom>
+                ブランド
+              </Typography>
+              <BrandSelector
+                onSelect={(id: number) => setBrand(id.toString())}
+                selectedBrand={selectedBrand}
+              />
+              {brand && (
+                <Typography variant="caption" color="text.secondary">
+                  選択中のブランドID: {brand}
                 </Typography>
               )}
             </Box>
@@ -154,9 +187,10 @@ export const ItemCreatePage = () => {
             fullWidth
             size="large"
             onClick={handleSubmit}
+            disabled={isSubmitting}
             sx={{ fontWeight: "bold", fontSize: "1.1rem", py: 1.5 }}
           >
-            出品する
+            {isSubmitting ? "出品中..." : "出品する"}
           </Button>
           <Button fullWidth sx={{ mt: 2 }} onClick={() => navigate(-1)}>
             もどる

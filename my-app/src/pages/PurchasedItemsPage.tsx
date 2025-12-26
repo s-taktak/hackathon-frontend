@@ -41,11 +41,17 @@ export const PurchasedItemsPage = () => {
           </Typography>
         </Box>
       ) : (
-        <Stack spacing={2}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+            gap: 2,
+          }}
+        >
           {items.map((item) => (
             <ItemCard key={item.id} item={item} />
           ))}
-        </Stack>
+        </Box>
       )}
     </Container>
   );

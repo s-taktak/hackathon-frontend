@@ -2,27 +2,27 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AiSearchRequest } from '../models/AiSearchRequest';
-import type { AiSearchResponse } from '../models/AiSearchResponse';
+import type { PredictRequest } from '../models/PredictRequest';
+import type { PredictResponse } from '../models/PredictResponse';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
-export class AiSearchService {
+export class AiService {
 
     /**
-     * Ai Search Endpoint
+     * Suggest Attributes
      * @param requestBody 
-     * @returns AiSearchResponse Successful Response
+     * @returns PredictResponse Successful Response
      * @throws ApiError
      */
-    public static aiSearchEndpointAiSearchPost(
-requestBody: AiSearchRequest,
-): CancelablePromise<AiSearchResponse> {
+    public static predictAttributes(
+requestBody: PredictRequest,
+): CancelablePromise<PredictResponse> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/aiSearch',
+            url: '/ai/suggest',
             body: requestBody,
             mediaType: 'application/json',
             errors: {

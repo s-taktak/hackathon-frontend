@@ -4,13 +4,14 @@ import {
   Container,
   CircularProgress,
   Grid,
+  Button,
 } from "@mui/material";
 import { ItemCard } from "../features/items/components/ItemCard";
 import { useItems } from "../features/items/hooks/useItems";
 import { Header } from "../components/Header";
 
 export const HomePage = () => {
-  const { items, loading } = useItems();
+  const { items, loading, loadingMore, hasMore, loadMore } = useItems();
 
   return (
     <>
@@ -45,6 +46,30 @@ export const HomePage = () => {
           <Typography variant="body1" textAlign="center" sx={{ py: 10 }}>
             表示できる商品がありません
           </Typography>
+        )}
+
+        {/* もっと見るボタン */}
+        {!loading && hasMore && items.length > 0 && (
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 6, mb: 4 }}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={loadMore}
+              disabled={loadingMore}
+              sx={{
+                minWidth: 200,
+                borderRadius: 8,
+                textTransform: "none",
+                fontWeight: "bold",
+              }}
+            >
+              {loadingMore ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "もっと見る"
+              )}
+            </Button>
+          </Box>
         )}
       </Container>
     </>

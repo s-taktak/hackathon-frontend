@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  AiSearchService,
+  DefaultService,
   AiSearchRequest,
   AiSearchResponse, // これを使う
   ChatMessage,
@@ -31,7 +31,7 @@ export const useChat = () => {
       };
 
       const data: AiSearchResponse =
-        await AiSearchService.aiSearchEndpointAiSearchPost(request);
+        await DefaultService.aiSearchEndpointAiSearchPost(request);
 
       const assistantMsg: DisplayMessage = {
         role: "assistant",

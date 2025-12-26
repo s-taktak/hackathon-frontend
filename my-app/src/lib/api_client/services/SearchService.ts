@@ -32,4 +32,17 @@ q: string,
         });
     }
 
+    /**
+     * Sync Vectors
+     * 【管理用】既存アイテムのベクトルを強制的に再生成する
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static syncVectors(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/search/sync',
+        });
+    }
+
 }

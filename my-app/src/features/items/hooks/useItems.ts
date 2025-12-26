@@ -1,30 +1,59 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ItemResponse, ItemService } from "../../../lib/api_client";
+
+const LIMIT = 20;
 
 export const useItems = () => {
   const [items, setItems] = useState<ItemResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [offset, setOffset] = useState<number>(0);
 
-  useEffect(() => {
-    let isMounted = true;
-    const fetchItems = async () => {
-      try {
-        const response = await ItemService.getItemsList();
-        if (isMounted) {
-          setItems(response);
-        }
-      } catch (error) {
-        if (isMounted) setItems([]);
-      } finally {
-        if (isMounted) setLoading(false);
+  const fetchItems = useCallback(async (skip: number, isLoadMore: boolean) => {
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
       }
-    };
 
-    fetchItems();
-    return () => {
-      isMounted = false;
-    };
+      const response = await ItemService.getItemsList(skip, LIMIT);
+
+      if (response.length < LIMIT) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+
+      if (skip === 0) {
+        setItems(response);
+      } else {
+        setItems((prev) => [...prev, ...response]);
+      }
+
+      setOffset(skip + LIMIT);
+    } catch (error) {
+      console.error(error);
+      if (skip === 0) setItems([]);
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false);
+      } else {
+        setLoading(false);
+      }
+    }
   }, []);
 
-  return { items, loading };
+  useEffect(() => {
+    fetchItems(0, false);
+  }, [fetchItems]);
+
+  const loadMore = () => {
+    if (!loadingMore && hasMore) {
+      fetchItems(offset, true);
+    }
+  };
+
+  return { items, loading, loadingMore, hasMore, loadMore };
 };

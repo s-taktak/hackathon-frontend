@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { ItemCard } from "../features/items/components/ItemCard";
-import { useChat } from "../features/AI/hooks/useChat";
+import { useChat } from "../features/ai/hooks/useChat";
 
 export const AiSearchPage = () => {
   // 1. フックから状態と関数を取得
@@ -118,7 +118,10 @@ export const AiSearchPage = () => {
                   <Box sx={{ width: "100%", mt: 1, mb: 2 }}>
                     <Grid container spacing={1}>
                       {msg.items.map((item) => (
-                        <Grid size={4} key={item.id}>
+                        <Grid
+                          size={{ xs: 12, sm: 6, md: 4 }}
+                          key={item.id}
+                        >
                           <Box
                             sx={{
                               height: "260px",
