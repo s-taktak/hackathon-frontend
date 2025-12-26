@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import {
   DefaultService,
   AiSearchRequest,
-  AiSearchResponse, // これを使う
+  AiSearchResponse,
   ChatMessage,
   ItemResponse,
 } from "../../../lib/api_client";
